@@ -6,7 +6,7 @@ CC=compiler/$(ARCH)/bin/$(ARCH)-gcc
 AS=compiler/$(ARCH)/bin/$(ARCH)-as
 ASFLAGS=-g
 CFLAGS= -std=c11 -ffreestanding -O0 -Wall -Wextra -g -I ./include -I tlibc/include -D ARCH_X86
-TEST_CFLAGS= -std=c11 -O0 -Wall -Wextra -g -I ./include -coverage -Wno-format -D ARCH_USERLAND
+TEST_CFLAGS= -std=c11 -O0 -Wall -Wextra -g -I ./include --coverage -Wno-format -D ARCH_USERLAND -fprofile-arcs -ftest-coverage
 QEMU_FLAGS= -m 1G
 
 all: bootloader-x86 kernel link-x86 
@@ -29,7 +29,7 @@ libk: build
 	${CC} -c kernel/libk/physical_allocator.c -o build/physical_allocator.o  ${CFLAGS}
 
 libk-tests:
-	${TEST_CC} kernel/libk/tests/stubs.c kernel/libk/tests/kmem.c kernel/libk/kmem.c  -o build/tests/kmem ${TEST_CFLAGS}
+	${TEST_CC} kernel/libk/tests/stubs.c kernel/libk/tests/kmem.c  -o build/tests/kmem ${TEST_CFLAGS}
 	${TEST_CC} kernel/libk/tests/stubs.c kernel/libk/tests/physical_allocator.c -o build/tests/physical_allocator ${TEST_CFLAGS}
 
 kernel: libk terminal gdt-x86 idt-x86 tlibc build keyboard timer paging-x86
