@@ -6,7 +6,7 @@ CC=compiler/$(ARCH)/bin/$(ARCH)-gcc
 AS=compiler/$(ARCH)/bin/$(ARCH)-as
 ASFLAGS=-g
 CFLAGS= -std=c11 -ffreestanding -O0 -Wall -Wextra -g -I ./include -I tlibc/include -D ARCH_X86
-TEST_CFLAGS= -std=c11 -O0 -Wall -Wextra -g -I ./include --coverage -Wno-format -D ARCH_USERLAND -fprofile-arcs -ftest-coverage
+TEST_CFLAGS= -std=c11 -O0 -Wall -Wextra -g -I ./include --coverage -Wno-format -D ARCH_USERLAND
 QEMU_FLAGS= -m 1G
 
 all: bootloader-x86 kernel link-x86 
@@ -18,6 +18,8 @@ run-tests: tests
 	${GCOV} kmem.gcno
 	./build/tests/physical_allocator
 	${GCOV} physical_allocator.gcno
+	./build/tests/process_table
+	${GCOV} process_table.gcno
 
 bootloader-x86: build
 	${AS} kernel/arch/x86/boot.s -o build/boot.o ${ASFLAGS}
@@ -27,7 +29,7 @@ libk: build
 	${CC} -c kernel/libk/kabort.c -o build/kabort.o  ${CFLAGS}
 	${CC} -c kernel/libk/kputs.c -o build/kputs.o  ${CFLAGS}
 	${CC} -c kernel/libk/physical_allocator.c -o build/physical_allocator.o  ${CFLAGS}
-	${CC} -c kernel/libk/physical_allocator.c -o build/physical_allocator.o  ${CFLAGS}
+	${CC} -c kernel/libk/process_table.c -o build/process_table.o  ${CFLAGS}
 
 libk-tests:
 	${TEST_CC} kernel/libk/tests/stubs.c kernel/libk/tests/kmem.c  -o build/tests/kmem ${TEST_CFLAGS}
