@@ -26,7 +26,7 @@ void kernel_main()
     memcpy(testing, hi, 16);
     kputs(testing);
     kfree(testing);
-    kernel_page_table_install();
+    uint32_t *page_dir = kernel_page_table_install();
 
     //char *foo = 0x324981389124;
     //memcpy(testing, foo, 16);
