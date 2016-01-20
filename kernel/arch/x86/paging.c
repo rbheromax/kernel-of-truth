@@ -174,18 +174,24 @@ uint32_t *get_page_entry(page_frame_t *page_dir, void *virtual_address) {
 }
 
 void free_table(uint32_t *page_dir) {
+    sys_klog("Entering free_table");
     disable_paging();
     // The last two entries of the page directory are reserved. The last one
     // points to the directory itself, and the second to last one points to
     // kernel space
     for (size_t i = 0; i < PAGE_TABLE_SIZE-2; ++i) {
         uint32_t *page_entry = (uint32_t*)GETADDRESS(page_dir[i]);
-        for (size_t j = 0; j < PAGE_TABLE_SIZE; ++j) {
-            if ((page_entry[j] & PAGE_PRESENT) == 1) {
-                free_frame(page_entry[j]);
+        if (page_dir[i] & PAGE_PRESENT) {
+            sys_klogf("Freeing page frame %p\n", page_dir[i]);
+            for (size_t j = 0; j < PAGE_TABLE_SIZE; ++j) {
+                if ((page_entry[j] & PAGE_PRESENT) == 1) {
+                    sys_klogf("Freeing entry frame %p\n", page_entry[j]);
+                    free_frame(page_entry[j]);
+                }
             }
         }
     }
     free_frame((page_frame_t)page_dir);
     just_enable_paging();
+    sys_klog("Exiting free_table");
 }
