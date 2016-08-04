@@ -116,11 +116,8 @@ int install_interrupt(uint8_t num, isr_t function) {
 
 
 void idt_install(void) {
-    // 256 is the number of entries in the table.
-    idtp.limit = (sizeof(struct idt_entry) * 256) - 1;
-    idtp.base = (uint32_t) & idt;
-
-    //memset(&idt, 0, sizeof(struct idt_entry) * 256);
+    idtp.limit = (sizeof(struct idt_entry) * IDT_SIZE) - 1;
+    idtp.base = (uint32_t)&idt;
 
     idt_set_gate(0, (uint32_t)isr0, 0x08, 0x8e);
     idt_set_gate(1, (uint32_t)isr1, 0x08, 0x8e);
