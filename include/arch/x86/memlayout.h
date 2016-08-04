@@ -15,6 +15,8 @@ extern uint32_t kernel_start;
 // The address of the end of the kernel. Defined by the linker.
 extern uint32_t kernel_end;
 
+// Kernel is loaded at 1 MB physical.
+#define KERNEL_PHYS_START (1*MB)
 #define KERNEL_END ((uint32_t)&kernel_end)
 #define KERNEL_START ((uint32_t)&kernel_start)
 #define KERNEL_SIZE (KERNEL_START - KERNEL_END)
