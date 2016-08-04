@@ -39,6 +39,9 @@ void kheap_install(struct kheap_metadata *root, size_t initial_heap_size);
 // Similar to malloc.
 void *kmalloc(size_t bytes);
 
+// Similar to calloc.
+void *kcalloc(size_t count, size_t size);
+
 // Similar to realloc.
 void *krealloc(void *ptr, size_t bytes);
 

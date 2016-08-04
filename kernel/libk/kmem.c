@@ -51,6 +51,12 @@ void *krealloc(void *ptr, size_t bytes) {
     }
 }
 
+void *kcalloc(size_t count, size_t size) {
+    void *mem = kmalloc(count * size);
+    memset(mem, 0, count * size);
+    return mem;
+}
+
 void *kmalloc(size_t bytes) {
     struct kheap_metadata *cur = root;
     if (bytes == 0) {
