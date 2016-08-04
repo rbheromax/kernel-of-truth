@@ -1,5 +1,7 @@
 #include <arch/x86/gdt.h>
 
+#define GDT_SIZE 3
+
 /* The Global Descriptor Table and its entries.
  * x86 uses a backward, antiquated segmented memory model for compatibility
  * with computers which were around in the late Cretaceous. The Global
@@ -35,7 +37,7 @@ static struct gdt_entry {
     uint8_t access;
     uint8_t granularity;
     uint8_t base_high;
-}__attribute__((packed)) gdt[3];
+}__attribute__((packed)) gdt[GDT_SIZE];
 
 /* A special pointer representing a pointer to the <gdt> and its size.
  * For whatever reason, we only record the full size minus 1.
@@ -71,8 +73,8 @@ static void gdt_set_gate(uint32_t num, uint64_t base, uint64_t limit,
 void gdt_install()
 {
     //Setup GDT pointer and limit
-    gdtp.limit = (sizeof(struct gdt_entry) * 3) - 1;
-    gdtp.base = (uint32_t) & gdt;
+    gdtp.limit = (sizeof(struct gdt_entry) * GDT_SIZE) - 1;
+    gdtp.base = (uint32_t)&gdt;
 
     // NULL descriptor
     gdt_set_gate(0, 0, 0, 0, 0);
